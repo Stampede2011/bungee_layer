@@ -38,7 +38,6 @@ public class SendPackPacket extends AbstractPacket {
 
     @Override
     public void read(ByteBuf buf, PacketDirection direction, int protocolVersion) {
-        System.out.println("! DEBUG: SendPackPacket - read()");
         url = readString(buf);
         sha1 = readString(buf);
         forced = buf.readBoolean();
@@ -49,7 +48,6 @@ public class SendPackPacket extends AbstractPacket {
 
     @Override
     public void write(ByteBuf buf, PacketDirection direction, int protocolVersion) {
-        System.out.println("! DEBUG: SendPackPacket - write()");
         writeString(url, buf);
         writeString(sha1, buf);
     }
@@ -72,7 +70,6 @@ public class SendPackPacket extends AbstractPacket {
 
     @Override
     public boolean equals(Object o) {
-        System.out.println("! DEBUG: SendPackPacket - equals()");
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SendPackPacket that = (SendPackPacket) o;

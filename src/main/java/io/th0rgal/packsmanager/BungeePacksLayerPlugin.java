@@ -10,7 +10,6 @@ public class BungeePacksLayerPlugin extends Plugin {
 
     @Override
     public void onEnable() {
-        this.getLogger().info("! DEBUG: BungeePacksLayerPlugin - onEnable()");
         Protocolize.protocolRegistration().registerPacket(
                 SendPackPacket.MAPPING,
                 Protocol.PLAY,

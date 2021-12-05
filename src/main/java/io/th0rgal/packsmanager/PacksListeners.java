@@ -22,7 +22,6 @@ public class PacksListeners extends AbstractPacketListener<SendPackPacket> imple
 
     @Override
     public void packetReceive(PacketReceiveEvent<SendPackPacket> event) {
-        System.out.println("! DEBUG: PacksListeners - packetReceive() - PacketReceiveEvent=" + event.toString());
         final SendPackPacket packet = event.packet();
         final UUID uuid = event.player().uniqueId();
         if (map.containsKey(uuid) && map.get(uuid).equals(packet.getSha1())) {
