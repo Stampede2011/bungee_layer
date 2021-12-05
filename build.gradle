@@ -19,7 +19,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     compileOnly "net.md-5:bungeecord-api:1.15-SNAPSHOT"
-    compileOnly 'de.exceptionflug:protocolize-api:1.7.1-SNAPSHOT'
+    compileOnly 'dev.simplix:protocolize-api:2.1.0'
 }
 
 processResources {

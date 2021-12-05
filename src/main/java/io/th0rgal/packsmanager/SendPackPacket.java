@@ -1,15 +1,17 @@
 package io.th0rgal.packsmanager;
 
-import de.exceptionflug.protocolize.api.protocol.AbstractPacket;
-import de.exceptionflug.protocolize.api.util.BufferUtil;
+import dev.simplix.protocolize.api.PacketDirection;
+import dev.simplix.protocolize.api.mapping.AbstractProtocolMapping;
+import dev.simplix.protocolize.api.mapping.ProtocolIdMapping;
+import dev.simplix.protocolize.api.packet.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import net.md_5.bungee.protocol.ProtocolConstants;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
-import static de.exceptionflug.protocolize.api.util.ProtocolVersions.*;
+import static dev.simplix.protocolize.api.util.ProtocolUtil.readString;
+import static dev.simplix.protocolize.api.util.ProtocolVersions.*;
+import static net.md_5.bungee.protocol.DefinedPacket.writeString;
 
 public class SendPackPacket extends AbstractPacket {
 
@@ -20,28 +22,38 @@ public class SendPackPacket extends AbstractPacket {
     private boolean hasPromptMessage;
     private String message;
 
-    public static final Map<Integer, Integer> MAPPING = new HashMap<>();
+    public final static List<ProtocolIdMapping> MAPPING = new ArrayList<>();
 
     static {
-        MAPPING.put(MINECRAFT_1_14, 0x3C);
-        MAPPING.put(MINECRAFT_1_14_1, 0x3C);
-        MAPPING.put(MINECRAFT_1_14_2, 0x3C);
-        MAPPING.put(MINECRAFT_1_14_3, 0x3C);
-        MAPPING.put(MINECRAFT_1_14_4, 0x3C);
-        MAPPING.put(MINECRAFT_1_15, 0x3C);
-        MAPPING.put(MINECRAFT_1_15_1, 0x3C);
-        MAPPING.put(MINECRAFT_1_15_2, 0x3C);
-        MAPPING.put(MINECRAFT_1_16, 0x3C);
-        MAPPING.put(MINECRAFT_1_16_1, 0x3C);
-        MAPPING.put(MINECRAFT_1_16_2, 0x3C);
-        MAPPING.put(MINECRAFT_1_16_3, 0x3C);
-        MAPPING.put(MINECRAFT_1_16_4, 0x3C);
-        MAPPING.put(MINECRAFT_1_17, 0x3C);
-        MAPPING.put(MINECRAFT_1_17_1, 0x3C);
+        MAPPING.add(AbstractProtocolMapping.rangedIdMapping(MINECRAFT_1_14, MINECRAFT_1_14_4, 0x3C));
+        MAPPING.add(AbstractProtocolMapping.rangedIdMapping(MINECRAFT_1_15, MINECRAFT_1_15_2, 0x3C));
+        MAPPING.add(AbstractProtocolMapping.rangedIdMapping(MINECRAFT_1_16, MINECRAFT_1_16_4, 0x3C));
+        MAPPING.add(AbstractProtocolMapping.rangedIdMapping(MINECRAFT_1_17, MINECRAFT_1_17_1, 0x3C));
+        MAPPING.add(AbstractProtocolMapping.rangedIdMapping(MINECRAFT_1_18, MINECRAFT_1_18, 0x3C));
     }
 
-    public SendPackPacket() {
 
+
+    public SendPackPacket() {
+        System.out.println("! DEBUG: SendPackPacket");
+    }
+
+    @Override
+    public void read(ByteBuf buf, PacketDirection direction, int protocolVersion) {
+        System.out.println("! DEBUG: SendPackPacket - read()");
+        url = readString(buf);
+        sha1 = readString(buf);
+        forced = buf.readBoolean();
+        hasPromptMessage = buf.readBoolean();
+        if (hasPromptMessage)
+            message = readString(buf);
+    }
+
+    @Override
+    public void write(ByteBuf buf, PacketDirection direction, int protocolVersion) {
+        System.out.println("! DEBUG: SendPackPacket - write()");
+        writeString(url, buf);
+        writeString(sha1, buf);
     }
 
     public void setUrl(String url) {
@@ -61,24 +73,8 @@ public class SendPackPacket extends AbstractPacket {
     }
 
     @Override
-    public void read(final ByteBuf buf, final ProtocolConstants.Direction direction, final int protocolVersion) {
-        url = readString(buf);
-        sha1 = readString(buf);
-        forced = buf.readBoolean();
-        hasPromptMessage = buf.readBoolean();
-        if (hasPromptMessage)
-            message = readString(buf);
-        BufferUtil.finishBuffer(this, buf, direction, protocolVersion);
-    }
-
-    @Override
-    public void write(final ByteBuf buf, final ProtocolConstants.Direction direction, final int protocolVersion) {
-        writeString(url, buf);
-        writeString(sha1, buf);
-    }
-
-    @Override
     public boolean equals(Object o) {
+        System.out.println("! DEBUG: SendPackPacket - equals()");
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SendPackPacket that = (SendPackPacket) o;

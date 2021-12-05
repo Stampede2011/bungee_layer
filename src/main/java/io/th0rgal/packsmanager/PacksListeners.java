@@ -1,8 +1,9 @@
 package io.th0rgal.packsmanager;
 
-import de.exceptionflug.protocolize.api.event.PacketReceiveEvent;
-import de.exceptionflug.protocolize.api.handler.PacketAdapter;
-import de.exceptionflug.protocolize.api.protocol.Stream;
+import dev.simplix.protocolize.api.Direction;
+import dev.simplix.protocolize.api.listener.AbstractPacketListener;
+import dev.simplix.protocolize.api.listener.PacketReceiveEvent;
+import dev.simplix.protocolize.api.listener.PacketSendEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -11,20 +12,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class PacksListeners extends PacketAdapter<SendPackPacket> implements Listener {
+public class PacksListeners extends AbstractPacketListener<SendPackPacket> implements Listener {
 
     private final Map<UUID, String> map = new HashMap<>();
 
     public PacksListeners() {
-        super(Stream.DOWNSTREAM, SendPackPacket.class);
+        super(SendPackPacket.class, Direction.DOWNSTREAM, 1);
+        System.out.println("! DEBUG: PacksListeners");
     }
 
     @Override
-    public void receive(final PacketReceiveEvent<SendPackPacket> event) {
-        final SendPackPacket packet = event.getPacket();
-        final UUID uuid = event.getPlayer().getUniqueId();
+    public void packetReceive(PacketReceiveEvent<SendPackPacket> event) {
+        System.out.println("! DEBUG: PacksListeners - packetReceive()");
+        final SendPackPacket packet = event.packet();
+        final UUID uuid = event.player().uniqueId();
         if (map.containsKey(uuid) && map.get(uuid).equals(packet.getSha1())) {
-            event.setCancelled(true);
+            event.cancelled(true);
             return;
         }
         map.put(uuid, packet.getSha1());
@@ -32,7 +35,13 @@ public class PacksListeners extends PacketAdapter<SendPackPacket> implements Lis
 
     @EventHandler
     public void onDisconnect(final PlayerDisconnectEvent event) {
+        System.out.println("! DEBUG: PacksListeners - onDisconnect()");
         map.remove(event.getPlayer().getUniqueId());
+    }
+
+    @Override
+    public void packetSend(PacketSendEvent<SendPackPacket> packetSendEvent) {
+        System.out.println("! DEBUG: PacksListeners - packetSend()");
     }
 
 }

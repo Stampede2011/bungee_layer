@@ -1,21 +1,23 @@
 package io.th0rgal.packsmanager;
 
-import de.exceptionflug.protocolize.api.protocol.ProtocolAPI;
+import dev.simplix.protocolize.api.PacketDirection;
+import dev.simplix.protocolize.api.Protocol;
+import dev.simplix.protocolize.api.Protocolize;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.protocol.Protocol;
 import net.md_5.bungee.protocol.ProtocolConstants;
 
 public class BungeePacksLayerPlugin extends Plugin {
 
     @Override
     public void onEnable() {
-        ProtocolAPI.getPacketRegistration().registerPacket(
-                Protocol.GAME,
-                ProtocolConstants.Direction.TO_CLIENT,
-                SendPackPacket.class,
-                SendPackPacket.MAPPING);
+        this.getLogger().info("! DEBUG: BungeePacksLayerPlugin - onEnable()");
+        Protocolize.protocolRegistration().registerPacket(
+                SendPackPacket.MAPPING,
+                Protocol.LOGIN,
+                PacketDirection.CLIENTBOUND,
+                SendPackPacket.class);
         PacksListeners listeners = new PacksListeners();
-        ProtocolAPI.getEventManager().registerListener(listeners);
+        Protocolize.listenerProvider().registerListener(listeners);
         this.getProxy().getPluginManager().registerListener(this, listeners);
     }
 
