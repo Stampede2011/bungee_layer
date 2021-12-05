@@ -18,12 +18,11 @@ public class PacksListeners extends AbstractPacketListener<SendPackPacket> imple
 
     public PacksListeners() {
         super(SendPackPacket.class, Direction.DOWNSTREAM, 1);
-        System.out.println("! DEBUG: PacksListeners");
     }
 
     @Override
     public void packetReceive(PacketReceiveEvent<SendPackPacket> event) {
-        System.out.println("! DEBUG: PacksListeners - packetReceive()");
+        System.out.println("! DEBUG: PacksListeners - packetReceive() - PacketReceiveEvent=" + event.toString());
         final SendPackPacket packet = event.packet();
         final UUID uuid = event.player().uniqueId();
         if (map.containsKey(uuid) && map.get(uuid).equals(packet.getSha1())) {
@@ -35,13 +34,12 @@ public class PacksListeners extends AbstractPacketListener<SendPackPacket> imple
 
     @EventHandler
     public void onDisconnect(final PlayerDisconnectEvent event) {
-        System.out.println("! DEBUG: PacksListeners - onDisconnect()");
         map.remove(event.getPlayer().getUniqueId());
     }
 
     @Override
     public void packetSend(PacketSendEvent<SendPackPacket> packetSendEvent) {
-        System.out.println("! DEBUG: PacksListeners - packetSend()");
+
     }
 
 }

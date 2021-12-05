@@ -13,7 +13,7 @@ public class BungeePacksLayerPlugin extends Plugin {
         this.getLogger().info("! DEBUG: BungeePacksLayerPlugin - onEnable()");
         Protocolize.protocolRegistration().registerPacket(
                 SendPackPacket.MAPPING,
-                Protocol.LOGIN,
+                Protocol.PLAY,
                 PacketDirection.CLIENTBOUND,
                 SendPackPacket.class);
         PacksListeners listeners = new PacksListeners();

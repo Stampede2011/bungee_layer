@@ -32,10 +32,8 @@ public class SendPackPacket extends AbstractPacket {
         MAPPING.add(AbstractProtocolMapping.rangedIdMapping(MINECRAFT_1_18, MINECRAFT_1_18, 0x3C));
     }
 
-
-
     public SendPackPacket() {
-        System.out.println("! DEBUG: SendPackPacket");
+
     }
 
     @Override
